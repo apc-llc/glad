@@ -87,7 +87,7 @@ target_link_libraries(glad dl)
 set_target_properties(glad PROPERTIES COMPILE_FLAGS "-m32" LINK_FLAGS "-m32")
 add_dependencies(glad glad-generate-files)
 target_include_directories(glad 
-    PRIVATE
+    PUBLIC
         $<BUILD_INTERFACE:${GLAD_INCLUDE_DIRS}>
     INTERFACE
         $<INSTALL_INTERFACE:include/glad>)
