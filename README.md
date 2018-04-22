@@ -1,4 +1,4 @@
-## GLAD reconfigured to intercept OpenGL calls in 32-bit binaries
+## GLAD reconfigured to intercept OpenGL calls in precompiled 32-bit binaries
 ====
 
 This is a customization of [Dav1dde](http://glad.dav1d.de)'s excellent GLAD GL/GLES/EGL/GLX/WGL Loader-Generator. Preload the GLAD shared library to intercept any OpenGL call from a precompiled 32-bit target binary. Add your own logic into `preGLcall` function defined in [callback.cpp](https://github.com/apc-llc/glad/blob/master/src/callback.cpp) to further customize interception.
@@ -12,6 +12,16 @@ $ mkdir build
 $ cmake ..
 $ make -j12
 $ LD_LIBRARY_PATH=$(pwd):$LD_LIBRARY_PATH LD_PRELOAD=libglad.so ./target_app
+glAlphaFunc(GL_GREATER, 0.000000f);
+glBindTexture(GL_TEXTURE_2D, 0);
+glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
+glDeleteTextures(0, 0xa1a30a8);
+glBindTexture(GL_TEXTURE_2D, 1);
+glBindTexture(GL_TEXTURE_2D, 0);
+glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
+glDeleteTextures(1, 0xa1a30c8);
+glBindTexture(GL_TEXTURE_2D, 2);
+glBindTexture(GL_TEXTURE_2D, 3);
 ```
 
 # Introduction to GLAD (original notes)
