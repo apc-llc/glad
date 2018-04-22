@@ -93,7 +93,7 @@ class CDebugGenerator(CGenerator):
         fobj.write('GLAPI PFN{}PROC glad_debug_{};\n'.format(
             func.proto.name.upper(), func.proto.name
         ))
-        fobj.write('#define {0} glad_debug_{0}\n'.format(func.proto.name))
+        #fobj.write('#define {0} glad_debug_{0}\n'.format(func.proto.name))
 
     def write_function(self, fobj, func):
         fobj.write('PFN{}PROC glad_{};\n'.format(
@@ -105,7 +105,7 @@ class CDebugGenerator(CGenerator):
             '{type} arg{i}'.format(type=param.type.to_c(), i=i)
             for i, param in enumerate(func.params)
         ) or 'void'
-        fobj.write('{} APIENTRY glad_debug_impl_{}({}) {{'.format(
+        fobj.write('{} APIENTRY {}({}) {{'.format(
             func.proto.ret.to_c(), func.proto.name, args_def
         ))
         args = ', '.join('arg{}'.format(i) for i, _ in enumerate(func.params))
@@ -127,6 +127,6 @@ class CDebugGenerator(CGenerator):
         ).splitlines())))
         fobj.write('\n}\n')
 
-        fobj.write('PFN{0}PROC glad_debug_{1} = glad_debug_impl_{1};\n'.format(
+        fobj.write('PFN{0}PROC glad_debug_{1} = {1};\n'.format(
             func.proto.name.upper(), func.proto.name
         ))

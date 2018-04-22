@@ -11,8 +11,11 @@ if(NOT CMAKE_VERSION VERSION_LESS 3.1)
   cmake_policy(SET CMP0054 NEW)
 endif()
 
-project(GLAD VERSION 0.1.18 LANGUAGES C)
+project(GLAD VERSION 0.1.18 LANGUAGES C CXX)
 
+# Manual build type selection (for debugging purposes)
+set(CMAKE_BUILD_TYPE Debug)
+#set(CMAKE_BUILD_TYPE Release)
 
 set(GLAD_DIR "${CMAKE_CURRENT_SOURCE_DIR}")
 set(GLAD_OUT_DIR "${CMAKE_CURRENT_BINARY_DIR}")
@@ -21,7 +24,7 @@ find_package(PythonInterp REQUIRED)
 # Options
 set(GLAD_PROFILE "compatibility" CACHE STRING "OpenGL profile")
 set(GLAD_API "" CACHE STRING "API type/version pairs, like \"gl=3.2,gles=\", no version means latest")
-set(GLAD_GENERATOR "c" CACHE STRING "Language to generate the binding for")
+set(GLAD_GENERATOR "c-debug" CACHE STRING "Language to generate the binding for")
 set(GLAD_EXTENSIONS "" CACHE STRING "Path to extensions file or comma separated list of extensions, if missing all extensions are included")
 set(GLAD_SPEC "gl" CACHE STRING "Name of the spec")
 option(GLAD_NO_LOADER "No loader" OFF)
@@ -79,7 +82,9 @@ add_custom_command(
 )
 add_custom_target(glad-generate-files DEPENDS ${GLAD_SOURCES})
 set_source_files_properties(${GLAD_SOURCES} PROPERTIES GENERATED TRUE)
-add_library(glad ${GLAD_SOURCES})
+add_library(glad SHARED ${GLAD_SOURCES} "src/callback.cpp")
+target_link_libraries(glad dl)
+set_target_properties(glad PROPERTIES COMPILE_FLAGS "-m32" LINK_FLAGS "-m32")
 add_dependencies(glad glad-generate-files)
 target_include_directories(glad 
     PRIVATE

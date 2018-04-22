@@ -35,13 +35,13 @@ static int get_exts(void) {
 #ifdef _GLAD_IS_SOME_NEW_VERSION
     if(max_loaded_major < 3) {
 #endif
-        exts = (const char *)glGetString(GL_EXTENSIONS);
+        exts = (const char *)glad_debug_glGetString(GL_EXTENSIONS);
 #ifdef _GLAD_IS_SOME_NEW_VERSION
     } else {
         unsigned int index;
 
         num_exts_i = 0;
-        glGetIntegerv(GL_NUM_EXTENSIONS, &num_exts_i);
+        glad_debug_glGetIntegerv(GL_NUM_EXTENSIONS, &num_exts_i);
         if (num_exts_i > 0) {
             exts_i = (const char **)realloc((void *)exts_i, (size_t)num_exts_i * (sizeof *exts_i));
         }
@@ -51,7 +51,7 @@ static int get_exts(void) {
         }
 
         for(index = 0; index < (unsigned)num_exts_i; index++) {
-            const char *gl_str_tmp = (const char*)glGetStringi(GL_EXTENSIONS, index);
+            const char *gl_str_tmp = (const char*)glad_debug_glGetStringi(GL_EXTENSIONS, index);
             size_t len = strlen(gl_str_tmp);
 
             char *local_str = (char*)malloc((len+1) * sizeof(char));
@@ -195,7 +195,7 @@ _FIND_VERSION = '''
         NULL
     };
 
-    version = (const char*) glGetString(GL_VERSION);
+    version = (const char*) glad_debug_glGetString(GL_VERSION);
     if (!version) return;
 
     for (i = 0;  prefixes[i];  i++) {
@@ -225,9 +225,9 @@ class OpenGLCLoader(BaseLoader):
 
     def write_begin_load(self, fobj):
         fobj.write('\tGLVersion.major = 0; GLVersion.minor = 0;\n')
-        fobj.write('\tglGetString = (PFNGLGETSTRINGPROC)load("glGetString");\n')
+        fobj.write('\tglad_debug_glGetString = (PFNGLGETSTRINGPROC)load("glGetString");\n')
         fobj.write('\tif(glGetString == NULL) return 0;\n')
-        fobj.write('\tif(glGetString(GL_VERSION) == NULL) return 0;\n')
+        fobj.write('\tif(glad_debug_glGetString(GL_VERSION) == NULL) return 0;\n')
 
     def write_end_load(self, fobj):
         fobj.write('\treturn GLVersion.major != 0 || GLVersion.minor != 0;\n')
